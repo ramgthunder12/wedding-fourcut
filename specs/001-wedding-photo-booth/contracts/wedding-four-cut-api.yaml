@@ -1,0 +1,164 @@
+openapi: 3.0.3
+info:
+  title: Wedding Four Cut API
+  version: 0.1.0
+  description: MVP API for session setup, frame listing, image upload, and download URL delivery.
+servers:
+  - url: http://localhost:8080
+paths:
+  /api/sessions:
+    post:
+      summary: Create wedding session
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [nickname]
+              properties:
+                nickname:
+                  type: string
+                  minLength: 2
+                  maxLength: 30
+      responses:
+        '201':
+          description: Session created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WeddingSession'
+
+  /api/sessions/{sessionId}/frames:
+    get:
+      summary: List available frames for a session
+      parameters:
+        - in: path
+          name: sessionId
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Frame list
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  frames:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/FrameTemplate'
+
+  /api/captures:
+    post:
+      summary: Upload composed image and return download URL
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required: [sessionId, frameId, composedImage]
+              properties:
+                sessionId:
+                  type: string
+                frameId:
+                  type: string
+                composedImage:
+                  type: string
+                  format: binary
+      responses:
+        '201':
+          description: Composed image saved
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CaptureDeliveryResponse'
+        '400':
+          description: Invalid request payload
+
+  /api/photos/{photoId}:
+    get:
+      summary: Get photo metadata and downloadable URL
+      parameters:
+        - in: path
+          name: photoId
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Photo details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ComposedPhoto'
+        '404':
+          description: Not found
+
+components:
+  schemas:
+    WeddingSession:
+      type: object
+      required: [sessionId, nickname, status, createdAt]
+      properties:
+        sessionId:
+          type: string
+        nickname:
+          type: string
+        status:
+          type: string
+          enum: [SETUP, READY, ACTIVE, ARCHIVED]
+        createdAt:
+          type: string
+          format: date-time
+
+    FrameTemplate:
+      type: object
+      required: [frameId, sessionId, name, overlayImageUrl, isActive]
+      properties:
+        frameId:
+          type: string
+        sessionId:
+          type: string
+        name:
+          type: string
+        overlayImageUrl:
+          type: string
+          format: uri
+        thumbnailUrl:
+          type: string
+          format: uri
+        isActive:
+          type: boolean
+
+    ComposedPhoto:
+      type: object
+      required: [photoId, sessionId, frameId, publicUrl, createdAt]
+      properties:
+        photoId:
+          type: string
+        sessionId:
+          type: string
+        frameId:
+          type: string
+        publicUrl:
+          type: string
+          format: uri
+        createdAt:
+          type: string
+          format: date-time
+
+    CaptureDeliveryResponse:
+      type: object
+      required: [captureId, photoId, imageUrl]
+      properties:
+        captureId:
+          type: string
+        photoId:
+          type: string
+        imageUrl:
+          type: string
+          format: uri
