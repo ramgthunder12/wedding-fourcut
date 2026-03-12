@@ -4,9 +4,8 @@ export function useCameraStream(enabled: boolean) {
   const [stream, setStream] = useState<MediaStream | null>(null);
   const [error, setError] = useState<string>("");
   const [isConnecting, setIsConnecting] = useState(false);
-  const [isSupported] = useState(
-    typeof navigator !== "undefined" && Boolean(navigator.mediaDevices?.getUserMedia)
-  );
+  const [isSecure] = useState(typeof window !== "undefined" && window.isSecureContext);
+  const [isSupported] = useState(typeof navigator !== "undefined" && Boolean(navigator.mediaDevices?.getUserMedia));
   const streamRef = useRef<MediaStream | null>(null);
 
   const stopStream = useCallback(() => {
@@ -19,6 +18,10 @@ export function useCameraStream(enabled: boolean) {
 
   const connectCamera = useCallback(async () => {
     if (!enabled) return;
+    if (!isSecure) {
+      setError("보안 연결(HTTPS)에서만 카메라를 사용할 수 있습니다.");
+      return;
+    }
     if (!navigator.mediaDevices?.getUserMedia) {
       setError("이 브라우저는 카메라를 지원하지 않습니다.");
       return;
@@ -50,12 +53,22 @@ export function useCameraStream(enabled: boolean) {
         streamRef.current = fallback;
         setStream(fallback);
       } catch (e) {
-        setError(e instanceof Error ? e.message : "카메라 권한이 거부되었거나 장치를 찾을 수 없습니다.");
+        if (e instanceof DOMException) {
+          if (e.name === "NotAllowedError") {
+            setError("카메라 권한이 거부되었습니다. 브라우저 설정에서 카메라 권한을 허용해 주세요.");
+          } else if (e.name === "NotFoundError") {
+            setError("사용 가능한 카메라 장치를 찾을 수 없습니다.");
+          } else {
+            setError(e.message || "카메라 연결에 실패했습니다.");
+          }
+        } else {
+          setError(e instanceof Error ? e.message : "카메라 권한이 거부되었거나 장치를 찾을 수 없습니다.");
+        }
       }
     } finally {
       setIsConnecting(false);
     }
-  }, [enabled, stopStream]);
+  }, [enabled, isSecure, stopStream]);
 
   useEffect(() => {
     if (enabled) {
@@ -69,5 +82,5 @@ export function useCameraStream(enabled: boolean) {
     };
   }, [enabled, connectCamera, stopStream]);
 
-  return { stream, error, isConnecting, isSupported, connectCamera };
+  return { stream, error, isConnecting, isSupported, isSecure, connectCamera };
 }

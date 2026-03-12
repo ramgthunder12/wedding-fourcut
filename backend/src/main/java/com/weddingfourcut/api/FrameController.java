@@ -22,7 +22,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 @RestController
 @RequestMapping("/api/sessions/{sessionId}/frames")
@@ -86,8 +85,7 @@ public class FrameController {
         Path target = uploadDir.resolve(filename);
         Files.copy(frameImage.getInputStream(), target, StandardCopyOption.REPLACE_EXISTING);
 
-        String baseUrl = ServletUriComponentsBuilder.fromCurrentContextPath().build().toUriString();
-        String overlayImageUrl = baseUrl + "/uploads/" + filename;
+        String overlayImageUrl = "/uploads/" + filename;
         return store.addFrame(sessionId, name.trim(), overlayImageUrl);
     }
 }
