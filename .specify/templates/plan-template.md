@@ -23,6 +23,7 @@
 **Testing**: [e.g., pytest, XCTest, cargo test or NEEDS CLARIFICATION]  
 **Target Platform**: [e.g., Linux server, iOS 15+, WASM or NEEDS CLARIFICATION]
 **Project Type**: [e.g., library/cli/web-service/mobile-app/compiler/desktop-app or NEEDS CLARIFICATION]  
+**UX Consistency Scope**: [shared components, terminology, accessibility baselines, or NEEDS CLARIFICATION]
 **Performance Goals**: [domain-specific, e.g., 1000 req/s, 10k lines/sec, 60 fps or NEEDS CLARIFICATION]  
 **Constraints**: [domain-specific, e.g., <200ms p95, <100MB memory, offline-capable or NEEDS CLARIFICATION]  
 **Scale/Scope**: [domain-specific, e.g., 10k users, 1M LOC, 50 screens or NEEDS CLARIFICATION]
@@ -31,7 +32,13 @@
 
 *GATE: Must pass before Phase 0 research. Re-check after Phase 1 design.*
 
-[Gates determined based on constitution file]
+- Code Quality: linting/formatting/static analysis gates are defined and enforceable in CI.
+- Testing Evidence: required test levels are identified for each changed behavior, including regression tests.
+- UX Consistency: impacted user flows and shared interaction patterns are identified with acceptance checks.
+- Performance Budgets: measurable latency/throughput/memory or payload limits are defined with validation method.
+- Simplicity: design avoids unnecessary abstraction and records rationale for unavoidable complexity.
+
+If any gate fails, the plan MUST document a time-bound exception with owner and mitigation.
 
 ## Project Structure
 

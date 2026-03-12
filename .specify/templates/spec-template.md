@@ -95,6 +95,16 @@
 - **FR-006**: System MUST authenticate users via [NEEDS CLARIFICATION: auth method not specified - email/password, SSO, OAuth?]
 - **FR-007**: System MUST retain user data for [NEEDS CLARIFICATION: retention period not specified]
 
+### Quality and Non-Functional Requirements *(mandatory)*
+
+- **NFR-001 (Code Quality)**: Changes MUST pass defined linting/formatting/static analysis gates.
+- **NFR-002 (Testing)**: Each changed behavior MUST map to required test evidence (unit/integration/e2e)
+  and include regression coverage for bug fixes.
+- **NFR-003 (UX Consistency)**: User-facing behavior MUST follow existing interaction patterns,
+  terminology, and accessibility expectations.
+- **NFR-004 (Performance)**: Feature MUST define measurable performance budgets (for example,
+  latency p95, memory ceiling, payload size, concurrency target) and validation method.
+
 ### Key Entities *(include if feature involves data)*
 
 - **[Entity 1]**: [What it represents, key attributes without implementation]
