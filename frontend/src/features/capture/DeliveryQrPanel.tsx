@@ -19,6 +19,16 @@ export function DeliveryQrPanel({ imageUrl, onComplete }: Props) {
       return normalized;
     }
   }, [imageUrl]);
+  const downloadUrl = useMemo(() => {
+    try {
+      const parsed = new URL(resolvedImageUrl, window.location.origin);
+      const fileName = parsed.pathname.split("/").filter(Boolean).pop();
+      if (!fileName) return "";
+      return `/api/downloads/${encodeURIComponent(fileName)}`;
+    } catch {
+      return "";
+    }
+  }, [resolvedImageUrl]);
 
   useEffect(() => {
     QRCode.toDataURL(resolvedImageUrl, { margin: 1, width: 260 }).then(setQrDataUrl).catch(() => setQrDataUrl(""));
@@ -28,21 +38,42 @@ export function DeliveryQrPanel({ imageUrl, onComplete }: Props) {
     setIsDownloading(true);
     setDownloadError("");
     try {
-      const response = await fetch(resolvedImageUrl);
-      if (!response.ok) {
-        throw new Error("다운로드 요청에 실패했습니다.");
+      if (downloadUrl) {
+        const link = document.createElement("a");
+        link.href = downloadUrl;
+        link.rel = "noopener";
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        return;
       }
+
+      const directLink = document.createElement("a");
+      directLink.href = resolvedImageUrl;
+      directLink.download = `wedding-fourcut-${Date.now()}.jpg`;
+      directLink.rel = "noopener";
+      document.body.appendChild(directLink);
+      directLink.click();
+      document.body.removeChild(directLink);
+
+      // Some mobile browsers ignore `download` for cross-origin/blob URLs.
+      // Fallback to fetch+blob and, if needed, open in a new tab.
+      const response = await fetch(resolvedImageUrl, { credentials: "include" });
+      if (!response.ok) throw new Error("다운로드 요청에 실패했습니다.");
+
       const blob = await response.blob();
       const objectUrl = URL.createObjectURL(blob);
       const link = document.createElement("a");
       link.href = objectUrl;
       link.download = `wedding-fourcut-${Date.now()}.jpg`;
+      link.rel = "noopener";
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
       URL.revokeObjectURL(objectUrl);
     } catch (e) {
-      setDownloadError(e instanceof Error ? e.message : "이미지 다운로드에 실패했습니다.");
+      window.open(resolvedImageUrl, "_blank", "noopener,noreferrer");
+      setDownloadError(e instanceof Error ? `${e.message} 새 탭에서 이미지를 열었습니다.` : "이미지 다운로드에 실패해 새 탭에서 열었습니다.");
     } finally {
       setIsDownloading(false);
     }
@@ -57,6 +88,11 @@ export function DeliveryQrPanel({ imageUrl, onComplete }: Props) {
         <button type="button" onClick={() => void downloadImage()} disabled={isDownloading}>
           {isDownloading ? "다운로드 중..." : "이미지 다운로드"}
         </button>
+      </div>
+      <div style={{ marginTop: 8 }}>
+        <a href={downloadUrl || resolvedImageUrl} target="_blank" rel="noreferrer noopener" download>
+          새 탭에서 이미지 열기
+        </a>
       </div>
       {downloadError ? <p style={{ color: "#b42318" }}>다운로드 오류: {downloadError}</p> : null}
       <div style={{ marginTop: 12 }}>
