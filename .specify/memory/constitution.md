@@ -1,106 +1,50 @@
-<!--
-Sync Impact Report
-- Version change: N/A -> 1.0.0
-- Modified principles:
-	- [PRINCIPLE_1_NAME] -> I. Code Quality Is Enforced
-	- [PRINCIPLE_2_NAME] -> II. Testing Evidence Is Mandatory
-	- [PRINCIPLE_3_NAME] -> III. UX Consistency Is a Product Requirement
-	- [PRINCIPLE_4_NAME] -> IV. Performance Budgets Are Non-Negotiable
-	- [PRINCIPLE_5_NAME] -> V. Simplicity and Maintainability Win
-- Added sections:
-	- Operational Quality Gates
-	- Delivery Workflow and Review Policy
-- Removed sections:
-	- None
-- Templates requiring updates:
-	- ✅ updated: .specify/templates/plan-template.md
-	- ✅ updated: .specify/templates/spec-template.md
-	- ✅ updated: .specify/templates/tasks-template.md
-	- ✅ reviewed (no change required): .github/prompts/speckit.constitution.prompt.md
-	- ✅ reviewed (no change required): .github/prompts/speckit.plan.prompt.md
-	- ✅ reviewed (no change required): .github/prompts/speckit.specify.prompt.md
-	- ✅ reviewed (no change required): .github/prompts/speckit.tasks.prompt.md
-	- ⚠ pending (path not present): .specify/templates/commands/*.md
-	- ⚠ pending (path not present): README.md
-	- ⚠ pending (path not present): docs/quickstart.md
-- Follow-up TODOs:
-	- None
--->
-
-# Weddingfourcut Constitution
+# [PROJECT_NAME] Constitution
+<!-- Example: Spec Constitution, TaskFlow Constitution, etc. -->
 
 ## Core Principles
 
-### I. Code Quality Is Enforced
-All production changes MUST pass static analysis, formatting, and peer review before merge.
-Every pull request MUST keep code understandable, cohesive, and free from dead paths.
-Reviewers MUST reject changes with unexplained complexity or unclear naming.
-Rationale: quality gates reduce long-term defects and maintenance cost.
+### [PRINCIPLE_1_NAME]
+<!-- Example: I. Library-First -->
+[PRINCIPLE_1_DESCRIPTION]
+<!-- Example: Every feature starts as a standalone library; Libraries must be self-contained, independently testable, documented; Clear purpose required - no organizational-only libraries -->
 
-### II. Testing Evidence Is Mandatory
-Every behavioral change MUST include tests at the right level (unit, integration, or end-to-end)
-and MUST provide failing-to-passing evidence in CI.
-Bug fixes MUST include regression tests that fail on the pre-fix behavior.
-Merges are blocked when required tests are missing or unstable.
-Rationale: verified behavior is more reliable than intent.
+### [PRINCIPLE_2_NAME]
+<!-- Example: II. CLI Interface -->
+[PRINCIPLE_2_DESCRIPTION]
+<!-- Example: Every library exposes functionality via CLI; Text in/out protocol: stdin/args → stdout, errors → stderr; Support JSON + human-readable formats -->
 
-### III. UX Consistency Is a Product Requirement
-User-facing flows MUST follow consistent interaction patterns, terminology, visual semantics,
-and accessibility expectations across screens and states.
-Changes to shared UX patterns MUST be reflected in the same pull request scope or explicitly
-deferred with approval.
-Rationale: consistent experiences improve trust, completion rates, and supportability.
+### [PRINCIPLE_3_NAME]
+<!-- Example: III. Test-First (NON-NEGOTIABLE) -->
+[PRINCIPLE_3_DESCRIPTION]
+<!-- Example: TDD mandatory: Tests written → User approved → Tests fail → Then implement; Red-Green-Refactor cycle strictly enforced -->
 
-### IV. Performance Budgets Are Non-Negotiable
-Features MUST define measurable performance budgets before implementation and MUST prove
-compliance before release.
-At minimum, each feature MUST state latency, memory or payload constraints, and behavior
-under expected concurrency.
-If a budget is exceeded, release is blocked unless a documented exception is approved.
-Rationale: performance is a core user requirement, not a post-release optimization.
+### [PRINCIPLE_4_NAME]
+<!-- Example: IV. Integration Testing -->
+[PRINCIPLE_4_DESCRIPTION]
+<!-- Example: Focus areas requiring integration tests: New library contract tests, Contract changes, Inter-service communication, Shared schemas -->
 
-### V. Simplicity and Maintainability Win
-Designs MUST prefer the smallest solution that satisfies current requirements.
-Teams MUST avoid speculative abstractions and MUST document any non-obvious architectural
-decision with trade-offs.
-Rationale: simpler systems are easier to change, debug, and scale.
+### [PRINCIPLE_5_NAME]
+<!-- Example: V. Observability, VI. Versioning & Breaking Changes, VII. Simplicity -->
+[PRINCIPLE_5_DESCRIPTION]
+<!-- Example: Text I/O ensures debuggability; Structured logging required; Or: MAJOR.MINOR.BUILD format; Or: Start simple, YAGNI principles -->
 
-## Operational Quality Gates
+## [SECTION_2_NAME]
+<!-- Example: Additional Constraints, Security Requirements, Performance Standards, etc. -->
 
-- Definition of Done MUST include: lint/format pass, required tests pass, UX acceptance check,
-	and performance budget verification for affected features.
-- Feature specifications MUST include measurable success criteria and explicit non-functional
-	constraints.
-- Plans and tasks MUST map directly to constitution principles so compliance can be audited.
+[SECTION_2_CONTENT]
+<!-- Example: Technology stack requirements, compliance standards, deployment policies, etc. -->
 
-## Delivery Workflow and Review Policy
+## [SECTION_3_NAME]
+<!-- Example: Development Workflow, Review Process, Quality Gates, etc. -->
 
-- Work MUST progress as: specification -> plan -> tasks -> implementation -> validation.
-- Each pull request MUST include: change summary, test evidence, risk notes, and rollback
-	considerations where applicable.
-- Reviews MUST confirm principle compliance explicitly. Approval without compliance review is
-	invalid.
-- Exceptions MUST be documented with owner, expiration date, and mitigation plan.
+[SECTION_3_CONTENT]
+<!-- Example: Code review requirements, testing gates, deployment approval process, etc. -->
 
 ## Governance
+<!-- Example: Constitution supersedes all other practices; Amendments require documentation, approval, migration plan -->
 
-This constitution is the highest-priority engineering policy for this repository.
-When lower-level guidance conflicts, this document takes precedence.
+[GOVERNANCE_RULES]
+<!-- Example: All PRs/reviews must verify compliance; Complexity must be justified; Use [GUIDANCE_FILE] for runtime development guidance -->
 
-Amendment process:
-1. Propose changes through a documented pull request referencing impacted principles.
-2. Obtain approval from repository maintainers.
-3. Update dependent templates and guidance files in the same change set.
-4. Record version bump rationale in the change history.
-
-Versioning policy:
-- MAJOR: removes or redefines a principle in a backward-incompatible way.
-- MINOR: adds a new principle or materially expands required practices.
-- PATCH: clarifies wording without changing governance intent.
-
-Compliance review expectations:
-- Every plan, spec, and task artifact MUST include an explicit constitution alignment check.
-- Reviewers MUST block merges for unresolved constitution violations.
-- Exceptions MUST be time-bound and tracked until closed.
-
-**Version**: 1.0.0 | **Ratified**: 2026-03-13 | **Last Amended**: 2026-03-13
+**Version**: [CONSTITUTION_VERSION] | **Ratified**: [RATIFICATION_DATE] | **Last Amended**: [LAST_AMENDED_DATE]
+<!-- Example: Version: 2.1.1 | Ratified: 2025-06-13 | Last Amended: 2025-07-16 -->
