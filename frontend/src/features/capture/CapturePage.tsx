@@ -17,7 +17,7 @@ interface Props {
 
 const OUTPUT_WIDTH = 720;
 const OUTPUT_HEIGHT = 960;
-const FRAME_OPACITY = 0.75;
+const FRAME_OPACITY = 1;
 
 async function loadImage(url: string): Promise<HTMLImageElement> {
   return new Promise((resolve, reject) => {

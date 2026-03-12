@@ -31,7 +31,7 @@ export function OverlayPreviewCanvas({ stream, overlayImageUrl, videoRef: extern
         <img
           src={resolvedOverlayUrl}
           alt="frame overlay"
-          style={{ position: "absolute", inset: 0, zIndex: 2, width: "100%", height: "100%", objectFit: "cover", opacity: 0.75, pointerEvents: "none" }}
+          style={{ position: "absolute", inset: 0, zIndex: 2, width: "100%", height: "100%", objectFit: "cover", opacity: 1, pointerEvents: "none" }}
         />
       ) : null}
     </div>
