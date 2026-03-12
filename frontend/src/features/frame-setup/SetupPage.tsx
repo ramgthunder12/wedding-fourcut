@@ -9,12 +9,22 @@ interface Props {
 export function SetupPage({ onReady }: Props) {
   const [nickname, setNickname] = useState("");
   const [sessionId, setSessionId] = useState<string>("");
+  const [isCreating, setIsCreating] = useState(false);
+  const [error, setError] = useState("");
 
   async function submit(e: FormEvent) {
     e.preventDefault();
-    if (!nickname.trim()) return;
-    const session = await createSession(nickname.trim());
-    setSessionId(session.sessionId);
+    if (!nickname.trim() || isCreating) return;
+    setIsCreating(true);
+    setError("");
+    try {
+      const session = await createSession(nickname.trim());
+      setSessionId(session.sessionId);
+    } catch (e) {
+      setError(e instanceof Error ? e.message : "세션 생성에 실패했습니다.");
+    } finally {
+      setIsCreating(false);
+    }
   }
 
   return (
@@ -24,8 +34,11 @@ export function SetupPage({ onReady }: Props) {
         <form onSubmit={submit}>
           <label htmlFor="nickname">닉네임</label>
           <input id="nickname" value={nickname} onChange={(e) => setNickname(e.target.value)} />
+          {error ? <p style={{ color: "#b42318" }}>세션 오류: {error}</p> : null}
           <div style={{ marginTop: 12 }}>
-            <button type="submit">세션 만들기</button>
+            <button type="submit" disabled={isCreating || !nickname.trim()}>
+              {isCreating ? "세션 생성 중..." : "세션 만들기"}
+            </button>
           </div>
         </form>
       ) : (

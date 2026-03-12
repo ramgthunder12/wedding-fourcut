@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 @RestController
 @RequestMapping("/api/captures")
@@ -50,7 +51,8 @@ public class CaptureController {
         Path target = dir.resolve(filename);
         Files.copy(composedImage.getInputStream(), target, StandardCopyOption.REPLACE_EXISTING);
 
-        String imageUrl = appProperties.getPublicBaseUrl().replaceAll("/$", "") + "/uploads/" + filename;
+        String baseUrl = ServletUriComponentsBuilder.fromCurrentContextPath().build().toUriString();
+        String imageUrl = baseUrl + "/uploads/" + filename;
         CaptureModels.ComposedPhoto photo = store.saveComposedPhoto(sessionId, frameId, imageUrl);
         return new CaptureModels.CaptureDeliveryResponse(UUID.randomUUID().toString(), photo.photoId(), imageUrl);
     }

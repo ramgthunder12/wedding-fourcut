@@ -1,6 +1,7 @@
 export type HttpMethod = "GET" | "POST";
 
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL ?? "http://localhost:8080";
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL
+  ?? `${window.location.protocol}//${window.location.hostname}:8080`;
 
 export async function apiRequest<T>(
   path: string,

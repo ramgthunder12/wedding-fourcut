@@ -21,8 +21,8 @@ public class SessionController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public SessionModels.WeddingSession createSession(@RequestBody SessionModels.CreateSessionRequest request) {
-        if (request.nickname() == null || request.nickname().trim().length() < 2) {
-            throw new IllegalArgumentException("Nickname must be at least 2 characters");
+        if (request.nickname() == null || request.nickname().trim().isEmpty()) {
+            throw new IllegalArgumentException("Nickname is required");
         }
         return store.createSession(request.nickname().trim());
     }

@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import type { FrameTemplate } from "../../services/sessionService";
 import { uploadComposedImage } from "../../services/captureService";
+import type { CaptureState } from "./captureState";
 import { nextCaptureState } from "./captureState";
 import { useCameraStream } from "./useCameraStream";
 import { OverlayPreviewCanvas } from "./OverlayPreviewCanvas";
@@ -15,9 +16,9 @@ interface Props {
 
 export function CapturePage({ sessionId, frame, onReset }: Props) {
   const [imageUrl, setImageUrl] = useState("");
-  const [state, setState] = useState<{ stage: "PREVIEW" | "CAPTURING" | "DELIVERED"; isBusy: boolean }>({ stage: "PREVIEW", isBusy: false });
+  const [state, setState] = useState<CaptureState>({ stage: "PREVIEW", isBusy: false });
   const videoRef = useRef<HTMLVideoElement>(null);
-  const { stream, error } = useCameraStream(Boolean(sessionId));
+  const { stream, error, isConnecting, isSupported, connectCamera } = useCameraStream(Boolean(sessionId));
 
   useSessionReset(Boolean(imageUrl), 10_000, onReset);
 
@@ -50,12 +51,35 @@ export function CapturePage({ sessionId, frame, onReset }: Props) {
   return (
     <section className="panel">
       <h2>촬영하기</h2>
-      {error && <p>{error}</p>}
+      <p>
+        {!isSupported
+          ? "이 브라우저는 카메라를 지원하지 않습니다."
+          : isConnecting
+            ? "카메라 연결 중..."
+            : stream
+              ? "카메라 연결됨"
+              : "카메라 연결 필요"}
+      </p>
+      <div style={{ marginBottom: 8 }}>
+        <button
+          type="button"
+          onClick={() => void connectCamera()}
+          disabled={!isSupported || isConnecting}
+        >
+          {stream ? "다시 연결" : "카메라 연결"}
+        </button>
+      </div>
+      {!stream && (
+        <p>
+          태블릿 브라우저에서 카메라 권한을 허용해 주세요. 외부 기기에서는 HTTPS 환경이 필요할 수 있습니다.
+        </p>
+      )}
+      {error && <p>카메라 오류: {error}</p>}
       <div style={{ position: "relative" }}>
         <OverlayPreviewCanvas stream={stream} overlayImageUrl={frame?.overlayImageUrl} videoRef={videoRef} />
       </div>
       <div style={{ marginTop: 12 }}>
-        <button type="button" onClick={capture} disabled={state.isBusy || !frame}>촬영</button>
+        <button type="button" onClick={capture} disabled={state.isBusy || isConnecting || !stream || !frame}>촬영</button>
       </div>
     </section>
   );
