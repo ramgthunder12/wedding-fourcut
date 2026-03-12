@@ -1,6 +1,8 @@
 import { useEffect, useRef, type RefObject } from "react";
 import { resolveAssetUrl } from "../../utils/resolveAssetUrl";
 
+const PREVIEW_OVERLAY_OPACITY = 1;
+
 interface Props {
   stream: MediaStream | null;
   overlayImageUrl?: string;
@@ -31,7 +33,7 @@ export function OverlayPreviewCanvas({ stream, overlayImageUrl, videoRef: extern
         <img
           src={resolvedOverlayUrl}
           alt="frame overlay"
-          style={{ position: "absolute", inset: 0, zIndex: 2, width: "100%", height: "100%", objectFit: "cover", opacity: 1, pointerEvents: "none" }}
+          style={{ position: "absolute", inset: 0, zIndex: 2, width: "100%", height: "100%", objectFit: "cover", opacity: PREVIEW_OVERLAY_OPACITY, pointerEvents: "none" }}
         />
       ) : null}
     </div>
